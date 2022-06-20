@@ -8,6 +8,9 @@ plugins {
 android {
     compileSdk 32
 
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
     defaultConfig {
         applicationId "com.kenny.bookreview"
         minSdk 23
@@ -22,9 +25,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", properties['test.base.url'])
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField("String", "BASE_URL", properties['release.base.url'])
         }
     }
     compileOptions {
@@ -79,6 +87,9 @@ dependencies {
 
     //Timber
     implementation "com.jakewharton.timber:timber:5.0.1"
+
+    //coil
+    implementation "io.coil-kt:coil-compose:2.1.0"
 }
 
 kapt {
