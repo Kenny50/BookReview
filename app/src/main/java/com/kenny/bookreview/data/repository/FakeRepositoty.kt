@@ -1,6 +1,7 @@
 package com.kenny.bookreview.data.repository
 
 import com.kenny.bookreview.data.local.BookReviewVo
+import com.kenny.bookreview.data.local.BookVo
 import com.kenny.bookreview.data.local.PagingBookReviewsVo
 import com.kenny.bookreview.domain.BookRepository
 import kotlinx.coroutines.delay
@@ -23,6 +24,13 @@ class FakeRepository : BookRepository {
         }.toList()
     }
 
+    val fakeImgList = listOf(
+        "https://i.imgur.com/MuJuuPB.jpg",
+        "https://i.imgur.com/y2zl6UN.jpg",
+        "https://i.imgur.com/GemmvWn.jpg",
+        "https://i.imgur.com/WDAnBNl.jpg",
+        "https://i.imgur.com/wv4egS8.jpg",
+    )
 
     override suspend fun getBookReviewDto(page: Int, pageSize: Int): PagingBookReviewsVo {
         delay(500)
@@ -33,6 +41,16 @@ class FakeRepository : BookRepository {
             )
         )
     }
+
+    override suspend fun getPopularBook(): List<BookVo> =
+        (1..5).map { index ->
+            BookVo(
+                cover = fakeImgList[index - 1],
+                index.toString(),
+                index.toString(),
+                index.toString(),
+            )
+        }.toList()
 
 
 }

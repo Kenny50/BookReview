@@ -8,3 +8,5 @@ val Indigo700 = Color(0xFF303F9F)
 val BlueGray200 = Color(0xFFB0BEC5)
 val BlueGray500 = Color(0xFF607D8B)
 val BlueGray700 = Color(0xFF455A64)
+
+const val MinContrastOfPrimaryVsSurface = 3.0f
