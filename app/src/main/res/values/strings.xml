@@ -2,4 +2,6 @@
     <string name="app_name">BookReview</string>
     <string name="home">home</string>
     <string name="search">search</string>
+    <string name="popular_now">Popular now</string>
+    <string name="recent_review">Recent Review</string>
 </resources>

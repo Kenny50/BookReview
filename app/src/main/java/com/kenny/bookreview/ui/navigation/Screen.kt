@@ -20,6 +20,12 @@ sealed class BottomNavScreen(
 sealed class Screen(val route: String) {
     object BookDetailScreen : Screen("book_detail_screen")
 
+    /**
+     * build route url for navigation, divide each by slash.
+     *
+     * @param args arguments to build route
+     * @return route
+     */
     fun withArgs(vararg args: String): String {
         return buildString {
             append(route)

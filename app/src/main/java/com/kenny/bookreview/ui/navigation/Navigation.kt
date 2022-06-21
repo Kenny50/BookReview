@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -21,8 +23,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.kenny.bookreview.ui.screen.HomeScreen
 import com.kenny.bookreview.ui.screen.SearchScreen
+import com.kenny.bookreview.ui.screen.home.HomeScreen
+import com.kenny.bookreview.ui.screen.home.HomeViewModel
 
 
 @Composable
@@ -50,8 +53,13 @@ fun Navigation() {
 
 private fun NavGraphBuilder.buildBottomScreen(navController: NavController) {
     composable(route = BottomNavScreen.Home.route) {
-        HomeScreen { bookId ->
-            navController.navigate(Screen.BookDetailScreen.withArgs(bookId.toString()))
+        val vm = hiltViewModel<HomeViewModel>()
+        HomeScreen(
+            vm.state,
+            vm.recentPopularBookList.collectAsState(),
+            vm::loadNextItem
+        ) { bookId ->
+            //navController.navigate(Screen.BookDetailScreen.withArgs(bookId.toString()))
         }
     }
 
