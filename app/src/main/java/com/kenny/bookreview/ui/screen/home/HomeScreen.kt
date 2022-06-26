@@ -1,6 +1,7 @@
 package com.kenny.bookreview.ui.screen.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -46,6 +47,7 @@ fun HomeScreen(
     loadNext: () -> Unit,
     onBookReviewClick: (Int) -> Unit
 ) {
+
     Box(
         contentAlignment = Alignment.BottomEnd
     ) {
@@ -101,7 +103,6 @@ fun HomeScreen(
                 )
             }
         }
-
     }
 }
 
