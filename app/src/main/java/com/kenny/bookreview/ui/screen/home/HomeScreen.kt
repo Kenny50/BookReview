@@ -1,16 +1,23 @@
 package com.kenny.bookreview.ui.screen.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -30,6 +37,7 @@ import com.kenny.bookreview.util.DynamicThemeBackgroundColorFromImage
 import com.kenny.bookreview.util.contrastAgainst
 import com.kenny.bookreview.util.rememberDominantColorState
 import com.kenny.bookreview.util.verticalGradientScrim
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -38,35 +46,62 @@ fun HomeScreen(
     loadNext: () -> Unit,
     onBookReviewClick: (Int) -> Unit
 ) {
-    LazyColumn {
-        item {
-            TopicSection(text = R.string.popular_now) {
-                DynamicBackgroundHeader(headerState.value)
+    Box(
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        val listState = rememberLazyListState()
+        LazyColumn(state = listState) {
+            item {
+                TopicSection(text = R.string.popular_now) {
+                    DynamicBackgroundHeader(headerState.value)
+                }
             }
-        }
-        item {
-            TopicSection(text = R.string.recent_review) {
+            item {
+                TopicSection(text = R.string.recent_review) {
 
+                }
             }
-        }
-        items(pagingState.items.size) { i ->
-            if (i >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading) {
-                loadNext()
+            items(pagingState.items.size) { i ->
+                if (i >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading) {
+                    loadNext()
+                }
+                BookReview(
+                    bookReview = pagingState.items[i],
+                    modifier = Modifier.clickable { onBookReviewClick(i) }
+                )
             }
-            BookReview(
-                bookReview = pagingState.items[i],
-                modifier = Modifier.clickable { onBookReviewClick(i) }
-            )
-        }
-        item {
-            if (pagingState.isLoading) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+            item {
+                if (pagingState.isLoading) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
                 }
             }
         }
+        val showScrollToTopButton by remember {
+            derivedStateOf {
+                listState.firstVisibleItemIndex > 0
+            }
+        }
+        val coroutineScope = rememberCoroutineScope()
+
+        AnimatedVisibility(visible = showScrollToTopButton) {
+            FloatingActionButton(
+                onClick = {
+                    coroutineScope.launch {
+                        listState.animateScrollToItem(index = 0)
+                    }
+                }
+            ) {
+                Icon(
+                    Icons.Default.KeyboardArrowUp,
+                    contentDescription = stringResource(R.string.scroll_to_top)
+                )
+            }
+        }
+
     }
 }
 
